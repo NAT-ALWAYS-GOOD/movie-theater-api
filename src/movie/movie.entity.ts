@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Session } from '../sessions/session.entity'; // Assurez-vous que le chemin est correct
 
 @Entity()
 export class Movie {
@@ -16,4 +17,7 @@ export class Movie {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Session, (session) => session.movie)
+  sessions: Session[];
 }
