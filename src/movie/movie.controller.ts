@@ -13,11 +13,16 @@ import { MovieService } from './movie.service';
 import { Movie } from './movie.entity';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('movies')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movie has been created',
+  })
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Post()
@@ -25,23 +30,39 @@ export class MovieController {
     return this.movieService.create(movie);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movie active status has been toggled',
+  })
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Patch(':id/toggle-active')
-  toggleMaintenance(@Param('id') id: number) {
+  toggleActive(@Param('id') id: number) {
     return this.movieService.toggleActive(id);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movies of the cinema',
+  })
   @Get()
   findAll() {
     return this.movieService.findAll();
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movie asked',
+  })
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.movieService.findOne(id);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movie has been updated',
+  })
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Put(':id')
@@ -49,6 +70,10 @@ export class MovieController {
     return this.movieService.update(id, movie);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Movie has been deleted',
+  })
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Delete(':id')

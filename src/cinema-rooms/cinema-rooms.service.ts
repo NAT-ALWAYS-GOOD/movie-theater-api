@@ -1,12 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  Between,
-  FindOptionsWhere,
-  LessThanOrEqual,
-  MoreThanOrEqual,
-  Repository,
-} from 'typeorm';
+import { Repository } from 'typeorm';
 import { CinemaRoom } from './cinema-room.entity';
 import { Session } from '../sessions/session.entity';
 import { CreateRoomDto } from './dto/createroom.dto';
@@ -51,8 +45,10 @@ export class CinemaRoomService {
     end?: string,
   ): Promise<Session[]> {
     const room = await this.cinemaRoomRepository.findOneBy({ id: roomId });
-    if (!room) {
-      throw new NotFoundException(`Cinema Room with ID ${roomId} not found`);
+    if (!room || room.inMaintenance) {
+      throw new NotFoundException(
+        `Cinema Room with ID ${roomId} not found, or in maintenance`,
+      );
     }
 
     const queryBuilder = this.sessionRepository.createQueryBuilder('session');

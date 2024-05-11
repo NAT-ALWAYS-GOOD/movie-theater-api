@@ -9,14 +9,20 @@ import { JwtStrategy } from './jwt.strategy';
 import { AccountService } from '../account/account.service';
 import { Account } from '../account/account.entity';
 import { Transaction } from '../account/transaction.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Account, Transaction]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: 'secretKey', // Utiliser une clé plus sécurisée et la stocker de manière sécurisée
-      signOptions: { expiresIn: '60000s' }, // Configurer selon les besoins
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '60000s' },
+      }),
     }),
   ],
   providers: [UserService, JwtStrategy, AccountService],

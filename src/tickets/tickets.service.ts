@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Ticket } from './ticket.entity';
 import { SuperTicket } from './superticket.entity';
 import { SuperTicketUsage } from './superticketusage.entity';
@@ -181,6 +181,54 @@ export class TicketService {
       sessionEndTime: usage.session.endTime,
       movie: usage.session.movie,
       remainingUses: usage.superTicket.remainingUses,
+    }));
+
+    return [...combinedTickets, ...combinedSuperTickets];
+  }
+
+  async countPersonsRegisteredForSession(sessionId: number): Promise<number> {
+    const numbersForSingleTicket = await this.ticketRepository.count({
+      where: { session: { id: sessionId } },
+    });
+
+    return numbersForSingleTicket;
+  }
+
+  async countPersonsPresentForSession(sessionId: number): Promise<number> {
+    const numbersForSingleTicket = await this.ticketRepository.count({
+      where: { session: { id: sessionId }, used: true },
+    });
+
+    const numbersForSuperTicket = await this.superTicketUsageRepository.count({
+      where: { session: { id: sessionId } },
+    });
+
+    return numbersForSingleTicket + numbersForSuperTicket;
+  }
+
+  async getTicketsForSession(sessionId: number) {
+    const singleTickets = await this.ticketRepository.find({
+      where: { session: { id: sessionId } },
+      relations: ['user'],
+    });
+
+    const combinedTickets = singleTickets.map((ticket) => ({
+      type: 'Standard Ticket',
+      ticketId: ticket.id,
+      user: ticket.user.username,
+      used: ticket.used,
+    }));
+
+    const superTickets = await this.superTicketRepository.find({
+      where: { usages: { session: { id: sessionId } } },
+      relations: ['user'],
+    });
+
+    const combinedSuperTickets = superTickets.map((ticket) => ({
+      type: 'Super Ticket',
+      superTicketId: ticket.id,
+      user: ticket.user.username,
+      used: true,
     }));
 
     return [...combinedTickets, ...combinedSuperTickets];

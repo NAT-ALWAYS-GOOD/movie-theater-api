@@ -58,6 +58,21 @@ export class SessionService {
       startTime.getTime() + movie.duration * 60000 + 1800000,
     );
 
+    // vérifier si une séance est déjà planifié sur ce créneau horaire
+    const existingSession = await this.sessionRepository
+      .createQueryBuilder('session')
+      .where('session.roomId = :roomId', { roomId: sessionData.roomId })
+      .where('session.startTime < :endTime AND session.endTime > :startTime', {
+        endTime,
+        startTime,
+      })
+      .getOne();
+    if (existingSession) {
+      throw new ConflictException(
+        'A session is already planned at this provided time on this room.',
+      );
+    }
+
     // Vérifiez si une séance pour le même film se chevauche avec ce créneau horaire dans n'importe quelle salle
     const overlappingSession = await this.sessionRepository
       .createQueryBuilder('session')
@@ -98,20 +113,75 @@ export class SessionService {
 
     return this.sessionRepository.save(session);
   }
-  findAll(): Promise<Session[]> {
-    return this.sessionRepository.find({ relations: ['movie', 'room'] });
+
+  async findAll(start?: string, end?: string): Promise<Session[]> {
+    const queryBuilder = this.sessionRepository.createQueryBuilder('session');
+
+    queryBuilder
+      .leftJoinAndSelect('session.movie', 'movie')
+      .leftJoinAndSelect('session.room', 'room')
+      .orderBy('session.startTime', 'ASC');
+
+    if (start) {
+      const startDate = new Date(start);
+      if (!isNaN(startDate.getTime())) {
+        queryBuilder.andWhere('session.startTime >= :start', {
+          start: startDate.toISOString(),
+        });
+      }
+    }
+
+    if (end) {
+      const endDate = new Date(end);
+      if (!isNaN(endDate.getTime())) {
+        queryBuilder.andWhere('session.endTime <= :end', {
+          end: endDate.toISOString(),
+        });
+      }
+    }
+
+    return await queryBuilder.getMany();
   }
 
-  async findByMovieId(movieId: number): Promise<Session[]> {
-    const sessions = await this.sessionRepository.find({
-      where: { movie: { id: movieId } },
-      relations: ['movie', 'room'],
-    });
+  async findByMovieId(
+    movieId: number,
+    start?: string,
+    end?: string,
+  ): Promise<Session[]> {
+    const queryBuilder = this.sessionRepository.createQueryBuilder('session');
+
+    queryBuilder
+      .leftJoinAndSelect('session.movie', 'movie')
+      .leftJoinAndSelect('session.room', 'room')
+      .where('session.movieId = :movieId', { movieId })
+      .orderBy('session.startTime', 'ASC');
+
+    if (start) {
+      const startDate = new Date(start);
+      if (!isNaN(startDate.getTime())) {
+        queryBuilder.andWhere('session.startTime >= :start', {
+          start: startDate.toISOString(),
+        });
+      }
+    }
+
+    if (end) {
+      const endDate = new Date(end);
+      if (!isNaN(endDate.getTime())) {
+        queryBuilder.andWhere('session.endTime <= :end', {
+          end: endDate.toISOString(),
+        });
+      }
+    }
+
+    const sessions = await queryBuilder.getMany();
+
     if (sessions.length === 0) {
       throw new NotFoundException(
         `No sessions found for movie with ID ${movieId}`,
       );
     }
+
     return sessions;
   }
 
