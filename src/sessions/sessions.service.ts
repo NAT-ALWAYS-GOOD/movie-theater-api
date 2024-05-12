@@ -62,10 +62,13 @@ export class SessionService {
     const existingSession = await this.sessionRepository
       .createQueryBuilder('session')
       .where('session.roomId = :roomId', { roomId: sessionData.roomId })
-      .where('session.startTime < :endTime AND session.endTime > :startTime', {
-        endTime,
-        startTime,
-      })
+      .andWhere(
+        'session.startTime < :endTime AND session.endTime > :startTime',
+        {
+          endTime,
+          startTime,
+        },
+      )
       .getOne();
     if (existingSession) {
       throw new ConflictException(

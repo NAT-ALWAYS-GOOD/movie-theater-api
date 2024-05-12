@@ -10,6 +10,7 @@ services:
     ports:
       - "${MYSQL_PORT}:3306"
     volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
       - movie-theater-data:/var/lib/mysql
     restart: unless-stopped
 

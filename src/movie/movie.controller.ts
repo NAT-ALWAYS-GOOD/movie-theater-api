@@ -14,6 +14,7 @@ import { Movie } from './movie.entity';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { ApiResponse } from '@nestjs/swagger';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('movies')
 export class MovieController {
@@ -45,6 +46,7 @@ export class MovieController {
     status: 200,
     description: 'Movies of the cinema',
   })
+  @Public()
   @Get()
   findAll() {
     return this.movieService.findAll();

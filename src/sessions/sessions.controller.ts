@@ -15,6 +15,7 @@ import { CreateSessionDto } from './dto/createsession.dto';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { ApiResponse } from '@nestjs/swagger';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('sessions')
 export class SessionController {
@@ -39,6 +40,7 @@ export class SessionController {
     description:
       'All sessions based on potential movieId, startDate and endDate',
   })
+  @Public()
   @Get()
   findAll(
     @Query('movie') movieId?: number,

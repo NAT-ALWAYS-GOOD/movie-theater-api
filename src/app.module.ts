@@ -49,7 +49,7 @@ import { Transaction } from './account/transaction.entity';
           Account,
           Transaction,
         ],
-        synchronize: true,
+        synchronize: false,
       }),
     }),
     MovieModule,
