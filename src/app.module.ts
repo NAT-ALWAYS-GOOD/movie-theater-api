@@ -21,7 +21,6 @@ import { SuperTicketUsage } from './tickets/superticketusage.entity';
 import { AccountModule } from './account/account.module';
 import { Account } from './account/account.entity';
 import { Transaction } from './account/transaction.entity';
-import { AccountGuard } from './guards/account.guard';
 
 @Module({
   imports: [
