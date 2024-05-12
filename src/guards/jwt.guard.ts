@@ -16,6 +16,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (isPublic) {
       return true;
     }
+    // log headers
+    const request = context.switchToHttp().getRequest();
+    console.log(request.headers);
     return super.canActivate(context);
   }
 }
