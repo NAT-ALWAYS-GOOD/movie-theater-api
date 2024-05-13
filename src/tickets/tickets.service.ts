@@ -191,7 +191,11 @@ export class TicketService {
       where: { session: { id: sessionId } },
     });
 
-    return numbersForSingleTicket;
+    const numbersForSuperTicket = await this.superTicketUsageRepository.count({
+      where: { session: { id: sessionId } },
+    });
+
+    return numbersForSingleTicket + numbersForSuperTicket;
   }
 
   async countPersonsPresentForSession(sessionId: number): Promise<number> {

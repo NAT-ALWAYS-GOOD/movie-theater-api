@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(new ValidationPipe());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -17,11 +18,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('movie-theater')
     .build();
-
-  dotenv.config();
-
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  dotenv.config();
 
   app.enableCors({
     origin: '*',
