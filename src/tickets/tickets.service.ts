@@ -195,6 +195,11 @@ export class TicketService {
       where: { session: { id: sessionId } },
     });
 
+    console.log('Numbers for single ticket: ', numbersForSingleTicket);
+    console.log('Numbers for super ticket: ', numbersForSuperTicket);
+
+    console.log('Total: ', numbersForSingleTicket + numbersForSuperTicket);
+
     return numbersForSingleTicket + numbersForSuperTicket;
   }
 
