@@ -13,10 +13,12 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   const config = new DocumentBuilder()
-    .setTitle('Movie Theater API')
-    .setDescription('Movie Theater API to manage a Movie Theater.')
+    .setTitle('NAT Cinemas API')
+    .setDescription(
+      "Movie Theater API to manage NAT Cinemas's theaters and movies.",
+    )
     .setVersion('1.0')
-    .addTag('movie-theater')
+    .addTag('nat-cinemas')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

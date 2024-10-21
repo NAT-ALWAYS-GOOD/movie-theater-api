@@ -1,14 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
-  Req,
+  Get,
   HttpCode,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { User } from './user.entity';
@@ -54,12 +54,12 @@ export class UserController {
 
   @ApiResponse({
     status: 200,
-    description: 'List of all users',
+    description: 'All users',
   })
   @UseGuards(RolesGuard)
   @Roles('admin')
   @Get()
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
@@ -69,7 +69,7 @@ export class UserController {
   })
   @Get(':userId')
   @UseGuards(SelfOrAdminGuard)
-  findOne(@Param('userId') id: number) {
+  findOne(@Param('userId') id: number): Promise<User> {
     return this.userService.findOne(id);
   }
 

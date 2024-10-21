@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Session } from '../sessions/session.entity'; // Assurez-vous que le chemin est correct
 
 @Entity()
@@ -8,6 +8,9 @@ export class Movie {
 
   @Column()
   title: string;
+
+  @Column()
+  description: string;
 
   @Column()
   duration: number;

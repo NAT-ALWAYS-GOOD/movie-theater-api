@@ -1,13 +1,8 @@
 # API Movie Theater
 
-## URL API
-```
-https://mtapi.inclinus.fr
-```
-
 ## Swagger
 ```
-https://mtapi.inclinus.fr/api
+http://localhost:${API_PORT}/api
 ```
 
 ## Lancer l'APP en local 
@@ -25,13 +20,18 @@ API_PORT=3000
 JWT_SECRET=jwtSecret
 ```
 
-### Lancer le docker-compose.yml
+### Lancez le docker-compose.yml
 ```
 docker compose up -d
 ```
 
-Accéder à l'API sur le port configuré
+### Lancez l'API
+```
+npm run start:dev
+```
+
+### Accédez à l'API sur le port configuré
 
 ```
-http://localhost:3000
+http://localhost:${API_PORT}
 ```

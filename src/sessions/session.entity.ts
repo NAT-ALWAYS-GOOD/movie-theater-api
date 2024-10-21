@@ -1,14 +1,14 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CinemaRoom } from '../cinema-rooms/cinema-room.entity'; // Assurez-vous que le chemin est correct
+import { CinemaRoom } from '../cinema-rooms/cinema-room.entity';
 import { Movie } from '../movie/movie.entity';
-import { Ticket } from '../tickets/ticket.entity';
-import { SuperTicketUsage } from '../tickets/superticketusage.entity'; // Assurez-vous que le chemin est correct
+import { SeatEntity } from './seat.entity';
+import { ReservationEntity } from './reservation.entity';
 
 @Entity()
 export class Session {
@@ -27,12 +27,12 @@ export class Session {
   @Column()
   endTime: Date;
 
-  @OneToMany(() => Ticket, (ticket: Ticket) => ticket.session)
-  tickets: Ticket[];
+  @OneToMany(() => SeatEntity, (sit: SeatEntity) => sit.session)
+  seats: SeatEntity[];
 
   @OneToMany(
-    () => SuperTicketUsage,
-    (superTicketUsage) => superTicketUsage.session,
+    () => ReservationEntity,
+    (reservation: ReservationEntity) => reservation.session,
   )
-  superTicketUsages: SuperTicketUsage[];
+  reservations: ReservationEntity[];
 }

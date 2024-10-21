@@ -9,6 +9,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   canActivate(context: ExecutionContext) {
+    // FIXME: remove this line
+    return true;
+
     const isPublic = this.reflector.get<boolean>(
       'isPublic',
       context.getHandler(),

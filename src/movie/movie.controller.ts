@@ -1,12 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
   Patch,
+  Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';

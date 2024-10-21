@@ -8,12 +8,10 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AccountService } from '../account/account.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    private accountService: AccountService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
@@ -32,8 +30,7 @@ export class UserService {
     }
     user.password = await this.hashPassword(user.password);
     await this.userRepository.save(user);
-    await this.accountService.createAccount(user.id);
-    return { id: user.id, username: user.username, account: user.account };
+    return { id: user.id, username: user.username };
   }
 
   async login(user: any): Promise<any> {
@@ -62,18 +59,6 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
     if (!user || !user.isActive) {
       return null;
-    }
-    return user;
-  }
-
-  async findOneWithAccount(id: number): Promise<User> {
-    // find user with relation account
-    const user = await this.userRepository.findOneOrFail({
-      where: { id: id },
-      relations: ['account'],
-    });
-    if (!user || !user.isActive) {
-      throw new NotFoundException('User not found');
     }
     return user;
   }

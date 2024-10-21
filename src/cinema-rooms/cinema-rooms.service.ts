@@ -30,22 +30,13 @@ export class CinemaRoomService {
     return cinemaRoom;
   }
 
-  async toggleMaintenance(roomId: number): Promise<CinemaRoom> {
-    const room = await this.cinemaRoomRepository.findOneBy({ id: roomId });
-    if (!room) {
-      throw new NotFoundException(`Cinema Room with ID ${roomId} not found`);
-    }
-    room.inMaintenance = !room.inMaintenance;
-    return this.cinemaRoomRepository.save(room);
-  }
-
   async findSchedule(
     roomId: number,
     start?: string,
     end?: string,
   ): Promise<Session[]> {
     const room = await this.cinemaRoomRepository.findOneBy({ id: roomId });
-    if (!room || room.inMaintenance) {
+    if (!room) {
       throw new NotFoundException(
         `Cinema Room with ID ${roomId} not found, or in maintenance`,
       );

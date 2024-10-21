@@ -14,18 +14,15 @@ import { CinemaRoom } from './cinema-rooms/cinema-room.entity';
 import { User } from './users/user.entity';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { TicketModule } from './tickets/tickets.module';
-import { Ticket } from './tickets/ticket.entity';
-import { SuperTicket } from './tickets/superticket.entity';
-import { SuperTicketUsage } from './tickets/superticketusage.entity';
-import { AccountModule } from './account/account.module';
-import { Account } from './account/account.entity';
-import { Transaction } from './account/transaction.entity';
+import { SeatEntity } from './sessions/seat.entity';
+import { TheaterModule } from './theater/theater.module';
+import { TheaterEntity } from './theater/theater.entity';
+import { ReservationEntity } from './sessions/reservation.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Rend le module disponible globalement
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -43,21 +40,18 @@ import { Transaction } from './account/transaction.entity';
           Session,
           CinemaRoom,
           User,
-          Ticket,
-          SuperTicket,
-          SuperTicketUsage,
-          Account,
-          Transaction,
+          SeatEntity,
+          TheaterEntity,
+          ReservationEntity,
         ],
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     MovieModule,
     SessionModule,
     CinemaRoomModule,
     UsersModule,
-    TicketModule,
-    AccountModule,
+    TheaterModule,
   ],
   controllers: [AppController],
   providers: [

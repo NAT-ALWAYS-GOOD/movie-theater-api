@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +16,7 @@ import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { ApiResponse } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { CreateReservationDTO } from './dto/createreservation.dto';
 
 @Controller('sessions')
 export class SessionController {
@@ -82,5 +83,14 @@ export class SessionController {
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.sessionService.remove(id);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Reservation has been created',
+  })
+  @Post('reservation')
+  createReservation(@Body() reservation: CreateReservationDTO) {
+    return this.sessionService.createReservation(reservation);
   }
 }

@@ -1,0 +1,731 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Hello world !"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "post": {
+        "operationId": "MovieController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Movie has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "MovieController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Movies of the cinema"
+          }
+        }
+      }
+    },
+    "/movies/{id}/toggle-active": {
+      "patch": {
+        "operationId": "MovieController_toggleActive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie active status has been toggled"
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "operationId": "MovieController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie asked"
+          }
+        }
+      },
+      "put": {
+        "operationId": "MovieController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "MovieController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie has been deleted"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "operationId": "SessionController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "SessionController_findAll",
+        "parameters": [
+          {
+            "name": "movie",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "start",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All sessions based on potential movieId, startDate and endDate"
+          }
+        }
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "operationId": "SessionController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session with id provided"
+          }
+        }
+      },
+      "put": {
+        "operationId": "SessionController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "SessionController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session has been deleted"
+          }
+        }
+      }
+    },
+    "/sessions/reservation": {
+      "post": {
+        "operationId": "SessionController_createReservation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation has been created"
+          }
+        }
+      }
+    },
+    "/cinema-rooms": {
+      "post": {
+        "operationId": "CinemaRoomController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoomDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "CinemaRoomController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All cinema rooms"
+          }
+        }
+      }
+    },
+    "/cinema-rooms/{id}/schedule": {
+      "get": {
+        "operationId": "CinemaRoomController_getSchedule",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "start",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule of specific cinema room with start and end date"
+          }
+        }
+      }
+    },
+    "/cinema-rooms/{id}": {
+      "get": {
+        "operationId": "CinemaRoomController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room asked"
+          }
+        }
+      },
+      "put": {
+        "operationId": "CinemaRoomController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "CinemaRoomController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been deleted"
+          }
+        }
+      }
+    },
+    "/users/signup": {
+      "post": {
+        "operationId": "UserController_signUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User has been created"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "operationId": "UserController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User exists, token sent"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "operationId": "UserController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User informations"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UserController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All users"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "operationId": "UserController_findOne",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user asked in the request"
+          }
+        }
+      },
+      "put": {
+        "operationId": "UserController_update",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "UserController_remove",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User has been deleted"
+          }
+        }
+      }
+    },
+    "/theaters": {
+      "post": {
+        "operationId": "TheaterController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTheaterDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Theater has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "TheaterController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All theaters"
+          }
+        }
+      }
+    },
+    "/theaters/{id}": {
+      "delete": {
+        "operationId": "TheaterController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Theater deleted"
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "NAT Cinemas API",
+    "description": "Movie Theater API to manage NAT Cinemas's theaters and movies.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "nat-cinemas",
+      "description": ""
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateSessionDto": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the movie"
+          },
+          "roomId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the room"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-10-21T10:51:39.337Z",
+            "description": "The start time of the session"
+          }
+        },
+        "required": [
+          "movieId",
+          "roomId",
+          "startTime"
+        ]
+      },
+      "CreateReservationDTO": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the session"
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user"
+          },
+          "seats": {
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "description": "The ids of the seats reserved",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sessionId",
+          "userId",
+          "seats"
+        ]
+      },
+      "CreateRoomDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the cinema room",
+            "example": "Room 1"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the room",
+            "example": "This room is equipped with the latest 3D technology."
+          },
+          "capacity": {
+            "type": "number",
+            "description": "The capacity of the room, must be between 15 and 30",
+            "example": 25,
+            "minimum": 15,
+            "maximum": 30
+          },
+          "accessibility": {
+            "type": "boolean",
+            "description": "Indicates if the room has access for disabled people",
+            "example": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the room, like IMAX, 3D, etc.",
+            "example": "IMAX"
+          }
+        },
+        "required": [
+          "name",
+          "capacity",
+          "type"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateTheaterDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the theater",
+            "example": "Cinema XYZ"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the theater",
+            "example": "A modern cinema in the heart of the city."
+          },
+          "streetNumber": {
+            "type": "string",
+            "description": "Street number of the theater",
+            "example": "10"
+          },
+          "streetName": {
+            "type": "string",
+            "description": "Street name of the theater",
+            "example": "Rue de la Paix"
+          },
+          "city": {
+            "type": "string",
+            "description": "City where the theater is located",
+            "example": "Paris"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal code of the theater",
+            "example": "75002"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country where the theater is located",
+            "example": "France"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude coordinate of the theater",
+            "example": 48.8675
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude coordinate of the theater",
+            "example": 2.3292
+          }
+        },
+        "required": [
+          "name",
+          "streetNumber",
+          "streetName",
+          "city",
+          "postalCode",
+          "country",
+          "latitude",
+          "longitude"
+        ]
+      }
+    }
+  }
+}

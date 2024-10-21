@@ -51,13 +51,4 @@ export class CreateRoomDto {
   })
   @IsString()
   type: string;
-
-  @ApiProperty({
-    description: 'An array of images for the room',
-    example: ['image1.jpg', 'image2.jpg'],
-    required: false,
-  })
-  @IsString({ each: true })
-  @IsOptional()
-  images?: string[];
 }

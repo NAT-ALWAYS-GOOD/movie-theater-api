@@ -1,12 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
-  Patch,
+  Get,
+  Param,
+  Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -34,18 +33,7 @@ export class CinemaRoomController {
 
   @ApiResponse({
     status: 200,
-    description: 'Toggled maintenance for Cinema Room',
-  })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
-  @Patch(':id/toggle-maintenance')
-  toggleMaintenance(@Param('id') id: number) {
-    return this.cinemaRoomService.toggleMaintenance(id);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'All cinema rooms (not in maintenance)',
+    description: 'All cinema rooms',
   })
   @Get()
   findAll() {

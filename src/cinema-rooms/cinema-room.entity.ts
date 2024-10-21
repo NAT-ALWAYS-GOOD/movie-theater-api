@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Session } from '../sessions/session.entity'; // Assurez-vous que le chemin est correct
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Session } from '../sessions/session.entity';
+import { TheaterEntity } from '../theater/theater.entity'; // Assurez-vous que le chemin est correct
 
 @Entity()
 export class CinemaRoom {
@@ -12,9 +19,6 @@ export class CinemaRoom {
   @Column()
   description: string;
 
-  @Column('simple-array')
-  images: string[];
-
   @Column()
   type: string;
 
@@ -24,9 +28,9 @@ export class CinemaRoom {
   @Column({ default: false })
   accessibility: boolean;
 
-  @Column({ default: false })
-  inMaintenance: boolean;
-
   @OneToMany(() => Session, (session) => session.room)
   sessions: Session[];
+
+  @OneToOne(() => TheaterEntity, (theater: TheaterEntity) => theater.rooms)
+  theater: TheaterEntity;
 }
