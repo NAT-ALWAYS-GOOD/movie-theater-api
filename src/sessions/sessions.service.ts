@@ -14,6 +14,8 @@ import { CreateReservationDTO } from './dto/createreservation.dto';
 import { SeatEntity } from './seat.entity';
 import * as QRCode from 'qrcode';
 import { User } from '../users/user.entity';
+import { ReservationDTO } from './dto/reservation.dto';
+import { SessionDTO } from './dto/session.dto';
 
 @Injectable()
 export class SessionService {
@@ -94,13 +96,26 @@ export class SessionService {
     }
 
     const session = new Session();
-    session.seats = await this.createSeats(session);
     session.movie = movie;
     session.room = room;
     session.startTime = startTime;
     session.endTime = endTime;
+    await this.sessionRepository.save(session);
 
-    return this.sessionRepository.save(session);
+    const seats = await this.createSeats(session);
+    await this.seatRepository.save(seats);
+
+    session.seats = seats;
+
+    await this.sessionRepository.save(session);
+
+    // remove session from all seats before returning to avoid circular reference
+    session.seats.forEach((seat) => {
+      // @ts-expect-error
+      delete seat.session;
+    });
+
+    return session;
   }
 
   private async createSeats(session: Session): Promise<SeatEntity[]> {
@@ -112,7 +127,7 @@ export class SessionService {
       seats.push(seat);
     }
     session.seats = seats;
-    return await this.seatRepository.save(seats);
+    return seats;
   }
 
   async findAll(start?: string, end?: string): Promise<Session[]> {
@@ -186,17 +201,19 @@ export class SessionService {
     return sessions;
   }
 
-  async findOne(id: number): Promise<Session> {
+  async findOne(id: number): Promise<SessionDTO> {
     const session = await this.sessionRepository
       .createQueryBuilder('session')
       .leftJoinAndSelect('session.movie', 'movie')
       .leftJoinAndSelect('session.room', 'room')
+      .leftJoinAndSelect('session.seats', 'seats')
+      .leftJoinAndSelect('seats.reservation', 'reservation')
       .where('session.id = :id', { id })
       .getOne();
     if (!session) {
       throw new NotFoundException(`Session with ID ${id} not found`);
     }
-    return session;
+    return SessionDTO.fromEntity(session);
   }
 
   async update(id: number, session: Partial<Session>): Promise<Session> {
@@ -217,9 +234,29 @@ export class SessionService {
     await this.sessionRepository.delete(id);
   }
 
+  async getReservationsOfUser(userId: number): Promise<ReservationDTO[]> {
+    const user = await this.userRepository.findOneBy({
+      id: userId,
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    const reservations = await this.reservationRepository.find({
+      where: {
+        user,
+      },
+      relations: ['user', 'session', 'session.movie', 'session.room', 'seats'],
+    });
+
+    return reservations.map((reservation) =>
+      ReservationEntity.toDto(reservation),
+    );
+  }
+
   async createReservation(
     createReservation: CreateReservationDTO,
-  ): Promise<ReservationEntity> {
+  ): Promise<ReservationDTO> {
     let reference: string;
     let exists = true;
 
@@ -243,15 +280,20 @@ export class SessionService {
     const seats: SeatEntity[] = [];
 
     for (const seatNumber of createReservation.seats) {
-      const seat = await this.seatRepository.findOneBy({
-        seatNumber,
-        session: session,
+      const seat = await this.seatRepository.findOne({
+        where: {
+          seatNumber,
+          session: session,
+        },
+        relations: ['reservation'],
       });
       if (!seat) {
         throw new NotFoundException(
           `Seat with number ${seatNumber} not found for session with ID ${createReservation.sessionId}`,
         );
       }
+      console.log('seat', seat);
+      console.log('seat.reservation', seat.reservation);
       if (seat.reservation) {
         throw new ConflictException(
           `Seat with number ${seatNumber} is already reserved`,
@@ -261,11 +303,6 @@ export class SessionService {
     }
 
     const reservation = new ReservationEntity();
-    for (const seat of seats) {
-      seat.reservation = reservation;
-    }
-    await this.seatRepository.save(seats);
-    reservation.seats = seats;
     reservation.reference = reference;
     const user = await this.userRepository.findOneBy({
       id: createReservation.userId,
@@ -282,7 +319,15 @@ export class SessionService {
     );
     await this.reservationRepository.save(reservation);
 
-    return reservation;
+    for (const seat of seats) {
+      seat.reservation = reservation;
+    }
+    await this.seatRepository.save(seats);
+    reservation.seats = seats;
+
+    await this.reservationRepository.save(reservation);
+
+    return ReservationEntity.toDto(reservation);
   }
 
   private generateReservationReference(): string {

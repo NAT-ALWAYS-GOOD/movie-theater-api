@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDTO } from './dto/createuser.dto';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,7 @@ export class UserService {
     return bcrypt.hash(password, 12);
   }
 
-  async create(user: User): Promise<any> {
+  async create(user: CreateUserDTO): Promise<any> {
     const foundUser = await this.userRepository.findOne({
       where: { username: user.username },
     });
@@ -29,8 +30,8 @@ export class UserService {
       throw new ConflictException('Username already taken');
     }
     user.password = await this.hashPassword(user.password);
-    await this.userRepository.save(user);
-    return { id: user.id, username: user.username };
+    const userEntity = await this.userRepository.save(user);
+    return { id: userEntity.id, username: userEntity.username };
   }
 
   async login(user: any): Promise<any> {
@@ -52,7 +53,10 @@ export class UserService {
 
   findAll(): Promise<User[]> {
     // return all users but only if they are active
-    return this.userRepository.find({ where: { isActive: true } });
+    return this.userRepository.find({
+      where: { isActive: true },
+      relations: ['reservations', 'favoriteTheater'],
+    });
   }
 
   async findOneForAuth(id: number): Promise<User | null> {
@@ -64,7 +68,10 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['reservations', 'favoriteTheater'],
+    });
     if (!user || !user.isActive) {
       throw new NotFoundException('User not found');
     }

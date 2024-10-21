@@ -26,17 +26,6 @@ export class CreateRoomDto {
   description?: string;
 
   @ApiProperty({
-    description: 'The capacity of the room, must be between 15 and 30',
-    example: 25,
-    minimum: 15,
-    maximum: 30,
-  })
-  @IsInt()
-  @Min(15)
-  @Max(30)
-  capacity: number;
-
-  @ApiProperty({
     description: 'Indicates if the room has access for disabled people',
     example: true,
     required: false,

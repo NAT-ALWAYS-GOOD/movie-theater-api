@@ -7,30 +7,35 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { CinemaRoomService } from './cinema-rooms.service';
 import { CinemaRoom } from './cinema-room.entity';
 import { CreateRoomDto } from './dto/createroom.dto';
-import { RolesGuard } from '../guards/roles.guard';
-import { Roles } from '../decorators/roles.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('cinema-rooms')
 export class CinemaRoomController {
   constructor(private readonly cinemaRoomService: CinemaRoomService) {}
 
+  @ApiOperation({
+    summary: 'Create cinema room',
+    operationId: 'createCinemaRoom',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Cinema Room has been created',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Post()
   create(@Body() cinemaRoom: CreateRoomDto) {
     return this.cinemaRoomService.create(cinemaRoom);
   }
 
+  @ApiOperation({
+    summary: 'Get all cinema rooms',
+    operationId: 'getAllCinemaRooms',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'All cinema rooms',
@@ -40,6 +45,11 @@ export class CinemaRoomController {
     return this.cinemaRoomService.findAll();
   }
 
+  @ApiOperation({
+    summary: 'Get schedule of cinema room',
+    operationId: 'getSchedule',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Schedule of specific cinema room with start and end date',
@@ -53,6 +63,11 @@ export class CinemaRoomController {
     return this.cinemaRoomService.findSchedule(id, start, end);
   }
 
+  @ApiOperation({
+    summary: 'Get cinema room by id',
+    operationId: 'getCinemaRoomById',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Cinema Room asked',
@@ -62,23 +77,29 @@ export class CinemaRoomController {
     return this.cinemaRoomService.findOne(id);
   }
 
+  @ApiOperation({
+    summary: 'Update cinema room',
+    operationId: 'updateCinemaRoom',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Cinema Room has been updated',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Put(':id')
   update(@Param('id') id: number, @Body() cinemaRoom: Partial<CinemaRoom>) {
     return this.cinemaRoomService.update(id, cinemaRoom);
   }
 
+  @ApiOperation({
+    summary: 'Delete cinema room',
+    operationId: 'deleteCinemaRoom',
+    tags: ['cinema-rooms'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Cinema Room has been deleted',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.cinemaRoomService.remove(id);

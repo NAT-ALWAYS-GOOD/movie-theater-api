@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CinemaRoom } from '../cinema-rooms/cinema-room.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class TheaterEntity {
@@ -35,4 +36,7 @@ export class TheaterEntity {
 
   @OneToMany(() => CinemaRoom, (cinemaRoom) => cinemaRoom.theater)
   rooms: CinemaRoom[];
+
+  @OneToMany(() => User, (user) => user.favoriteTheater)
+  fans: User[];
 }

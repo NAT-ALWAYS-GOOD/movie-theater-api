@@ -7,41 +7,50 @@ import {
   Patch,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { Movie } from './movie.entity';
-import { RolesGuard } from '../guards/roles.guard';
-import { Roles } from '../decorators/roles.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { CreateMovieDTO } from './dto/createmovie.dto';
 
 @Controller('movies')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
+  @ApiOperation({
+    summary: 'Create movie',
+    operationId: 'createMovie',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movie has been created',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Post()
-  create(@Body() movie: Movie) {
+  create(@Body() movie: CreateMovieDTO) {
     return this.movieService.create(movie);
   }
 
+  @ApiOperation({
+    summary: 'Toggle movie active status',
+    operationId: 'toggleMovieActive',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movie active status has been toggled',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Patch(':id/toggle-active')
   toggleActive(@Param('id') id: number) {
     return this.movieService.toggleActive(id);
   }
 
+  @ApiOperation({
+    summary: 'Get all movies',
+    operationId: 'getAllMovies',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movies of the cinema',
@@ -52,6 +61,11 @@ export class MovieController {
     return this.movieService.findAll();
   }
 
+  @ApiOperation({
+    summary: 'Get movie by id',
+    operationId: 'getMovieById',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movie asked',
@@ -61,23 +75,29 @@ export class MovieController {
     return this.movieService.findOne(id);
   }
 
+  @ApiOperation({
+    summary: 'Update movie',
+    operationId: 'updateMovie',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movie has been updated',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Put(':id')
   update(@Param('id') id: number, @Body() movie: Partial<Movie>) {
     return this.movieService.update(id, movie);
   }
 
+  @ApiOperation({
+    summary: 'Delete movie',
+    operationId: 'deleteMovie',
+    tags: ['movies'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Movie has been deleted',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.movieService.remove(id);

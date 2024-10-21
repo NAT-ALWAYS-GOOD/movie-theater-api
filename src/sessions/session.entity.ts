@@ -27,7 +27,7 @@ export class Session {
   @Column()
   endTime: Date;
 
-  @OneToMany(() => SeatEntity, (sit: SeatEntity) => sit.session)
+  @OneToMany(() => SeatEntity, (seat: SeatEntity) => seat.session)
   seats: SeatEntity[];
 
   @OneToMany(

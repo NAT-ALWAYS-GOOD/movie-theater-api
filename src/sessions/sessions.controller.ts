@@ -7,14 +7,11 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { SessionService } from './sessions.service';
 import { Session } from './session.entity';
 import { CreateSessionDto } from './dto/createsession.dto';
-import { RolesGuard } from '../guards/roles.guard';
-import { Roles } from '../decorators/roles.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
 import { CreateReservationDTO } from './dto/createreservation.dto';
 
@@ -22,12 +19,15 @@ import { CreateReservationDTO } from './dto/createreservation.dto';
 export class SessionController {
   constructor(private readonly sessionService: SessionService) {}
 
+  @ApiOperation({
+    summary: 'Create session',
+    operationId: 'createSession',
+    tags: ['sessions'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Session has been created',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Post()
   create(
     @Body()
@@ -36,6 +36,11 @@ export class SessionController {
     return this.sessionService.create(session);
   }
 
+  @ApiOperation({
+    summary: 'Get all sessions',
+    operationId: 'getAllSessions',
+    tags: ['sessions'],
+  })
   @ApiResponse({
     status: 200,
     description:
@@ -54,6 +59,11 @@ export class SessionController {
     return this.sessionService.findAll(start, end);
   }
 
+  @ApiOperation({
+    summary: 'Get session by id',
+    operationId: 'getSessionById',
+    tags: ['sessions'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Session with id provided',
@@ -63,28 +73,39 @@ export class SessionController {
     return this.sessionService.findOne(id);
   }
 
+  @ApiOperation({
+    summary: 'Update session',
+    operationId: 'updateSession',
+    tags: ['sessions'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Session has been updated',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Put(':id')
   update(@Param('id') id: number, @Body() session: Partial<Session>) {
     return this.sessionService.update(id, session);
   }
 
+  @ApiOperation({
+    summary: 'Delete session',
+    operationId: 'deleteSession',
+    tags: ['sessions'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Session has been deleted',
   })
-  @UseGuards(RolesGuard)
-  @Roles('admin')
   @Delete(':id')
   remove(@Param('id') id: number) {
     return this.sessionService.remove(id);
   }
 
+  @ApiOperation({
+    summary: 'Create reservation for user',
+    operationId: 'createReservationForUser',
+    tags: ['reservations'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Reservation has been created',
@@ -92,5 +113,19 @@ export class SessionController {
   @Post('reservation')
   createReservation(@Body() reservation: CreateReservationDTO) {
     return this.sessionService.createReservation(reservation);
+  }
+
+  @ApiOperation({
+    summary: 'Get all reservations of user',
+    operationId: 'getAllReservationsOfUser',
+    tags: ['reservations'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Reservations of user',
+  })
+  @Get('reservation/user/:userId')
+  getReservationsOfUser(@Param('userId') userId: number) {
+    return this.sessionService.getReservationsOfUser(userId);
   }
 }

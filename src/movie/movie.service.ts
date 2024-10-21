@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './movie.entity';
+import { CreateMovieDTO } from './dto/createmovie.dto';
 
 @Injectable()
 export class MovieService {
@@ -10,7 +11,7 @@ export class MovieService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  create(movie: Movie): Promise<Movie> {
+  create(movie: CreateMovieDTO): Promise<Movie> {
     return this.movieRepository.save(movie);
   }
 

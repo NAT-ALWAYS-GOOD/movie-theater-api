@@ -22,7 +22,7 @@ export class CinemaRoom {
   @Column()
   type: string;
 
-  @Column()
+  @Column({ default: 50 })
   capacity: number;
 
   @Column({ default: false })
