@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Session } from '../sessions/session.entity'; // Assurez-vous que le chemin est correct
+import { Session } from '../sessions/session.entity';
 
 @Entity()
 export class Movie {
@@ -20,6 +20,9 @@ export class Movie {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: 'dQw4w9WgXcQ' })
+  trailerYoutubeId: string;
 
   @OneToMany(() => Session, (session) => session.movie)
   sessions: Session[];

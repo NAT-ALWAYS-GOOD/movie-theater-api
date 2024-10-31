@@ -44,7 +44,7 @@ import { ReservationEntity } from './sessions/reservation.entity';
           TheaterEntity,
           ReservationEntity,
         ],
-        synchronize: true,
+        synchronize: false,
       }),
     }),
     MovieModule,

@@ -44,8 +44,11 @@ export class SessionService {
       );
     }
 
-    const room = await this.cinemaRoomRepository.findOneBy({
-      id: sessionData.roomId,
+    const room = await this.cinemaRoomRepository.findOne({
+      where: {
+        id: sessionData.roomId,
+      },
+      relations: ['theater'],
     });
     if (!room) {
       throw new NotFoundException(
@@ -206,6 +209,7 @@ export class SessionService {
       .createQueryBuilder('session')
       .leftJoinAndSelect('session.movie', 'movie')
       .leftJoinAndSelect('session.room', 'room')
+      .leftJoinAndSelect('room.theater', 'theater')
       .leftJoinAndSelect('session.seats', 'seats')
       .leftJoinAndSelect('seats.reservation', 'reservation')
       .where('session.id = :id', { id })

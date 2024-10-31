@@ -1,6 +1,6 @@
 import {
   Column,
-  Entity,
+  Entity, ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -31,6 +31,6 @@ export class CinemaRoom {
   @OneToMany(() => Session, (session) => session.room)
   sessions: Session[];
 
-  @OneToOne(() => TheaterEntity, (theater: TheaterEntity) => theater.rooms)
+  @ManyToOne(() => TheaterEntity, (theater: TheaterEntity) => theater.rooms)
   theater: TheaterEntity;
 }
