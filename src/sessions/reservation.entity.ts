@@ -37,6 +37,7 @@ export class ReservationEntity {
   public static toDto(res: ReservationEntity): ReservationDTO {
     return {
       reference: res.reference,
+      createdAt: res.createdAt,
       qrCode: res.qrCode,
       seats: res.seats.map((seat) => seat.seatNumber),
       user: res.user.username,

@@ -1,0 +1,957 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Hello world !"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "post": {
+        "operationId": "createMovie",
+        "summary": "Create movie",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMovieDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Movie has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAllMovies",
+        "summary": "Get all movies",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Movies of the cinema"
+          }
+        }
+      }
+    },
+    "/movies/{id}/toggle-active": {
+      "patch": {
+        "operationId": "toggleMovieActive",
+        "summary": "Toggle movie active status",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie active status has been toggled"
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "operationId": "getMovieById",
+        "summary": "Get movie by id",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie asked"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateMovie",
+        "summary": "Update movie",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteMovie",
+        "summary": "Delete movie",
+        "tags": [
+          "movies"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Movie has been deleted"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "operationId": "createSession",
+        "summary": "Create session",
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAllSessions",
+        "summary": "Get all sessions",
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [
+          {
+            "name": "movie",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "start",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All sessions based on potential movieId, startDate and endDate"
+          }
+        }
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "operationId": "getSessionById",
+        "summary": "Get session by id",
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session with id provided"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateSession",
+        "summary": "Update session",
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteSession",
+        "summary": "Delete session",
+        "tags": [
+          "sessions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session has been deleted"
+          }
+        }
+      }
+    },
+    "/sessions/reservation": {
+      "post": {
+        "operationId": "createReservationForUser",
+        "summary": "Create reservation for user",
+        "tags": [
+          "reservations"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation has been created"
+          }
+        }
+      }
+    },
+    "/sessions/reservation/user/{userId}": {
+      "get": {
+        "operationId": "getAllReservationsOfUser",
+        "summary": "Get all reservations of user",
+        "tags": [
+          "reservations"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reservations of user"
+          }
+        }
+      }
+    },
+    "/cinema-rooms": {
+      "post": {
+        "operationId": "createCinemaRoom",
+        "summary": "Create cinema room",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoomDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAllCinemaRooms",
+        "summary": "Get all cinema rooms",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All cinema rooms"
+          }
+        }
+      }
+    },
+    "/cinema-rooms/{id}/schedule": {
+      "get": {
+        "operationId": "getSchedule",
+        "summary": "Get schedule of cinema room",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "start",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule of specific cinema room with start and end date"
+          }
+        }
+      }
+    },
+    "/cinema-rooms/{id}": {
+      "get": {
+        "operationId": "getCinemaRoomById",
+        "summary": "Get cinema room by id",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room asked"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateCinemaRoom",
+        "summary": "Update cinema room",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteCinemaRoom",
+        "summary": "Delete cinema room",
+        "tags": [
+          "cinema-rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cinema Room has been deleted"
+          }
+        }
+      }
+    },
+    "/users/signup": {
+      "post": {
+        "operationId": "signUp",
+        "summary": "Sign up",
+        "tags": [
+          "users"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User has been created"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "operationId": "login",
+        "summary": "Login",
+        "tags": [
+          "users"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User exists, token sent"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "operationId": "getProfile",
+        "summary": "Get user profile",
+        "tags": [
+          "users"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User informations"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "getAllUsers",
+        "summary": "Get all users",
+        "tags": [
+          "users"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All users"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "operationId": "getUser",
+        "summary": "Get a user",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user asked in the request"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateUser",
+        "summary": "Update a user",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User has been updated"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteUser",
+        "summary": "Delete a user",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User has been deleted"
+          }
+        }
+      }
+    },
+    "/theaters": {
+      "post": {
+        "operationId": "createTheater",
+        "summary": "Create theater",
+        "tags": [
+          "theaters"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTheaterDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Theater has been created"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getAllTheaters",
+        "summary": "Get all theaters",
+        "tags": [
+          "theaters"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All theaters"
+          }
+        }
+      }
+    },
+    "/theaters/{id}": {
+      "delete": {
+        "operationId": "deleteTheater",
+        "summary": "Delete theater",
+        "tags": [
+          "theaters"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Theater deleted"
+          }
+        }
+      }
+    },
+    "/theaters/favorite/{id}/user/{userId}": {
+      "put": {
+        "operationId": "setFavoriteTheaterForUser",
+        "summary": "Set favorite theater for user",
+        "tags": [
+          "theaters"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Theater provided is now your favorite"
+          }
+        }
+      }
+    },
+    "/theaters/favorite/{userId}": {
+      "delete": {
+        "operationId": "resetFavoriteTheaterOfUser",
+        "summary": "Reset favorite theater for user",
+        "tags": [
+          "theaters"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorite theater reset"
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "NAT Cinemas API",
+    "description": "Movie Theater API to manage NAT Cinemas's theaters and movies.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "nat-cinemas",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateMovieDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Batman",
+            "description": "The name of the movie"
+          },
+          "description": {
+            "type": "string",
+            "example": "The Dark Knight, Batman, the vigilante of Gotham City, goes on a brutal war against the Joker, a criminal mastermind who terrorizes the city.",
+            "description": "The description of the movie / synopsys"
+          },
+          "duration": {
+            "type": "number",
+            "example": 1,
+            "description": "Time in minutes"
+          },
+          "releaseDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-10-31T22:58:50.432Z",
+            "description": "The release date of the movie"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "duration",
+          "releaseDate"
+        ]
+      },
+      "CreateSessionDto": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the movie"
+          },
+          "roomId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the room"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-10-31T22:58:50.495Z",
+            "description": "The start time of the session"
+          }
+        },
+        "required": [
+          "movieId",
+          "roomId",
+          "startTime"
+        ]
+      },
+      "CreateReservationDTO": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the session"
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "description": "The id of the user"
+          },
+          "seats": {
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "description": "The ids of the seats reserved",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "sessionId",
+          "userId",
+          "seats"
+        ]
+      },
+      "CreateRoomDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the cinema room",
+            "example": "Room 1"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the room",
+            "example": "This room is equipped with the latest 3D technology."
+          },
+          "accessibility": {
+            "type": "boolean",
+            "description": "Indicates if the room has access for disabled people",
+            "example": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the room, like IMAX, 3D, etc.",
+            "example": "IMAX"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
+      "CreateUserDTO": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "inclinus",
+            "description": "The username of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "password",
+            "description": "The password of the user"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateTheaterDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the theater",
+            "example": "Cinema XYZ"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of the theater",
+            "example": "A modern cinema in the heart of the city."
+          },
+          "streetNumber": {
+            "type": "string",
+            "description": "Street number of the theater",
+            "example": "10"
+          },
+          "streetName": {
+            "type": "string",
+            "description": "Street name of the theater",
+            "example": "Rue de la Paix"
+          },
+          "city": {
+            "type": "string",
+            "description": "City where the theater is located",
+            "example": "Paris"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "Postal code of the theater",
+            "example": "75002"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country where the theater is located",
+            "example": "France"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude coordinate of the theater",
+            "example": 48.8675
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude coordinate of the theater",
+            "example": 2.3292
+          }
+        },
+        "required": [
+          "name",
+          "streetNumber",
+          "streetName",
+          "city",
+          "postalCode",
+          "country",
+          "latitude",
+          "longitude"
+        ]
+      }
+    }
+  }
+}
