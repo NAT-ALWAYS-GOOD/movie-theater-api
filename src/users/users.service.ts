@@ -37,6 +37,7 @@ export class UserService {
   async login(user: any): Promise<any> {
     const foundUser = await this.userRepository.findOne({
       where: { username: user.username },
+      relations: ['reservations', 'favoriteTheater'],
     });
     if (
       foundUser &&
@@ -45,6 +46,7 @@ export class UserService {
     ) {
       const payload = { username: foundUser.username, id: foundUser.id };
       return {
+        user: foundUser,
         access_token: this.jwtService.sign(payload),
       };
     }
