@@ -272,8 +272,9 @@ export class SessionService {
       exists = !!existingReservation;
     } while (exists);
 
-    const session = await this.sessionRepository.findOneBy({
-      id: createReservation.sessionId,
+    const session = await this.sessionRepository.findOne({
+      where: { id: createReservation.sessionId },
+      relations: ['movie', 'room'],
     });
     if (!session) {
       throw new NotFoundException(

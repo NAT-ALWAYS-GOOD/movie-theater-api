@@ -24,6 +24,9 @@ export class Movie {
   @Column({ default: 'dQw4w9WgXcQ' })
   trailerYoutubeId: string;
 
+  @Column()
+  imageUrl: string;
+
   @OneToMany(() => Session, (session) => session.movie)
   sessions: Session[];
 }

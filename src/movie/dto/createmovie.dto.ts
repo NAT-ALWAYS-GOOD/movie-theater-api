@@ -30,4 +30,11 @@ export class CreateMovieDTO {
   })
   @IsDateString()
   releaseDate: Date;
+
+  @ApiProperty({
+    example: 'https://www.google.com',
+    description: 'The URL of the movie poster',
+  })
+  @IsString()
+  imageUrl: string;
 }
