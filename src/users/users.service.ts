@@ -31,7 +31,11 @@ export class UserService {
     }
     user.password = await this.hashPassword(user.password);
     const userEntity = await this.userRepository.save(user);
-    return { id: userEntity.id, username: userEntity.username };
+    const entireUser = await this.userRepository.findOne({
+      where: { username: userEntity.username },
+      relations: ['reservations', 'favoriteTheater'],
+    });
+    return { user: entireUser, access_token: this.jwtService.sign(user) };
   }
 
   async login(user: any): Promise<any> {

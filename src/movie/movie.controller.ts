@@ -6,7 +6,7 @@ import {
   Param,
   Patch,
   Post,
-  Put,
+  Put, Query,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { Movie } from './movie.entity';
@@ -57,8 +57,10 @@ export class MovieController {
   })
   @Public()
   @Get()
-  findAll() {
-    return this.movieService.findAll();
+  findAll(@Query('released') released?: string) {
+    const parsedReleased =
+      released === 'true' ? true : released === 'false' ? false : undefined;
+    return this.movieService.findAll(parsedReleased);
   }
 
   @ApiOperation({

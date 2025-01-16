@@ -5,6 +5,6 @@ export class ReservationDTO {
   createdAt: Date;
   qrCode: string;
   seats: number[];
-  user: string;
+  userId: number;
   session: Session;
 }

@@ -40,7 +40,7 @@ export class ReservationEntity {
       createdAt: res.createdAt,
       qrCode: res.qrCode,
       seats: res.seats.map((seat) => seat.seatNumber),
-      user: res.user.username,
+      userId: res.user.id,
       session: res.session,
     };
   }

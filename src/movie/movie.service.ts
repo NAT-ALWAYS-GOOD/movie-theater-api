@@ -11,12 +11,23 @@ export class MovieService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  create(movie: CreateMovieDTO): Promise<Movie> {
-    return this.movieRepository.save(movie);
+  async create(movie: CreateMovieDTO): Promise<Movie> {
+    return await this.movieRepository.save(movie);
   }
 
-  findAll(): Promise<Movie[]> {
-    return this.movieRepository.find({ where: { isActive: true } });
+  async findAll(released?: boolean | undefined): Promise<Movie[]> {
+    const result = await this.movieRepository.find({
+      where: { isActive: true },
+    });
+    if (released === false) {
+      return result.filter((movie) => movie.releaseDate > new Date());
+    }
+
+    if (released === true) {
+      return result.filter((movie) => movie.releaseDate <= new Date());
+    }
+
+    return result;
   }
 
   async findOne(id: number): Promise<Movie> {
