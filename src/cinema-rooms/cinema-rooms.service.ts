@@ -19,11 +19,15 @@ export class CinemaRoomService {
   }
 
   findAll(): Promise<CinemaRoom[]> {
-    return this.cinemaRoomRepository.find();
+    return this.cinemaRoomRepository.find({ relations: ['theater'] });
   }
 
   async findOne(id: number): Promise<CinemaRoom> {
-    const cinemaRoom = await this.cinemaRoomRepository.findOneBy({ id });
+    const cinemaRooms = await this.cinemaRoomRepository.find({
+      where: { id },
+      relations: ['theater'],
+    });
+    const cinemaRoom = cinemaRooms[0];
     if (!cinemaRoom) {
       throw new Error('Cinema room not found');
     }

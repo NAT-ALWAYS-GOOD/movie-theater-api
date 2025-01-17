@@ -40,4 +40,11 @@ export class CreateRoomDto {
   })
   @IsString()
   type: string;
+
+  @ApiProperty({
+    description: 'The theater id where the room is located',
+    example: 1,
+  })
+  @IsInt()
+  theaterId: number;
 }

@@ -7,15 +7,34 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTheaterDTO } from './dto/createtheater.dto';
 import { TheaterService } from './theater.service';
+import { MovieSessionsGroup } from './theater.structs';
 
 @Controller('theaters')
 export class TheaterController {
   constructor(private readonly theaterService: TheaterService) {}
 
-  @ApiOperation({ summary: 'Create theater', operationId: 'createTheater', tags: ['theaters'] })
+  @ApiOperation({
+    summary: 'Get all movies which has session from theater',
+    operationId: 'getAllMoviesSessionsFromTheater',
+    tags: ['theaters'],
+  })
+  @ApiOkResponse({
+    type: [MovieSessionsGroup],
+    description: 'Liste des films et de leurs sessions pour un théâtre donné',
+  })
+  @Get(':id/movies-sessions')
+  getAllMoviesSessionsFromTheater(@Param('id') theaterId: number) {
+    return this.theaterService.getAllMoviesSessionsFromTheater(theaterId);
+  }
+
+  @ApiOperation({
+    summary: 'Create theater',
+    operationId: 'createTheater',
+    tags: ['theaters'],
+  })
   @ApiResponse({
     status: 200,
     description: 'Theater has been created',
@@ -25,7 +44,11 @@ export class TheaterController {
     return this.theaterService.create(theaterDTO);
   }
 
-  @ApiOperation({ summary: 'Get all theaters', operationId: 'getAllTheaters', tags: ['theaters'] })
+  @ApiOperation({
+    summary: 'Get all theaters',
+    operationId: 'getAllTheaters',
+    tags: ['theaters'],
+  })
   @ApiResponse({
     status: 200,
     description: 'All theaters',
@@ -35,7 +58,11 @@ export class TheaterController {
     return this.theaterService.findAll();
   }
 
-  @ApiOperation({ summary: 'Delete theater', operationId: 'deleteTheater', tags: ['theaters'] })
+  @ApiOperation({
+    summary: 'Delete theater',
+    operationId: 'deleteTheater',
+    tags: ['theaters'],
+  })
   @ApiResponse({
     status: 204,
     description: 'Theater deleted',
