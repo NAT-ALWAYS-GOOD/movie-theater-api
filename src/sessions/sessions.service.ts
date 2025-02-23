@@ -250,12 +250,22 @@ export class SessionService {
       where: {
         user,
       },
-      relations: ['user', 'session', 'session.movie', 'session.room', 'seats'],
+      relations: [
+        'user',
+        'session',
+        'session.movie',
+        'session.room',
+        'session.room.theater',
+        'seats',
+      ],
     });
 
-    return reservations.map((reservation) =>
-      ReservationEntity.toDto(reservation),
-    );
+    return reservations.map((reservation) => {
+      return ReservationEntity.toDto(
+        reservation,
+        reservation.session.room.theater,
+      );
+    });
   }
 
   async createReservation(
@@ -332,7 +342,7 @@ export class SessionService {
 
     await this.reservationRepository.save(reservation);
 
-    return ReservationEntity.toDto(reservation);
+    return ReservationEntity.toDto(reservation, null);
   }
 
   private generateReservationReference(): string {

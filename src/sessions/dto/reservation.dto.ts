@@ -1,4 +1,5 @@
 import { Session } from '../session.entity';
+import { TheaterEntity } from '../../theater/theater.entity';
 
 export class ReservationDTO {
   reference: string;
@@ -7,4 +8,5 @@ export class ReservationDTO {
   seats: number[];
   userId: number;
   session: Session;
+  theaterEntity: TheaterEntity | null;
 }
