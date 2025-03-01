@@ -10,7 +10,7 @@ export class SessionDTO {
   endTime: Date;
   seats: {
     seatNumber: number;
-    reserved: boolean;
+    isReserved: boolean;
   }[];
 
   static fromEntity(session: Session) {
@@ -22,7 +22,7 @@ export class SessionDTO {
       endTime: session.endTime,
       seats: session.seats.map((seat) => ({
         seatNumber: seat.seatNumber,
-        reserved: !!seat.reservation,
+        isReserved: !!seat.reservation,
       })),
     };
   }

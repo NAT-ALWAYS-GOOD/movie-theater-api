@@ -11,9 +11,10 @@ import {
 import { SessionService } from './sessions.service';
 import { Session } from './session.entity';
 import { CreateSessionDto } from './dto/createsession.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
 import { CreateReservationDTO } from './dto/createreservation.dto';
+import { MovieSessionsGroup } from '../theater/theater.structs';
 
 @Controller('sessions')
 export class SessionController {
@@ -127,5 +128,25 @@ export class SessionController {
   @Get('reservation/user/:userId')
   getReservationsOfUser(@Param('userId') userId: number) {
     return this.sessionService.getReservationsOfUser(userId);
+  }
+
+  @ApiOperation({
+    summary: 'Get all sessions of a movie and theater',
+    operationId: 'getAllSessionsFromMovieIdAndTheaterId',
+    tags: ['sessions'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des sessions pour un théâtre et un film donné',
+  })
+  @Get('/movie/:movieId/theater/:theaterId')
+  getAllSessionsFromMovieIdAndTheaterId(
+    @Param('movieId') movieId: number,
+    @Param('theaterId') theaterId: number,
+  ) {
+    return this.sessionService.getAllSessionsFromMovieIdAndTheaterId(
+      movieId,
+      theaterId,
+    );
   }
 }

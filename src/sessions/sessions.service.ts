@@ -34,6 +34,33 @@ export class SessionService {
     private userRepository: Repository<User>,
   ) {}
 
+  async getAllSessionsFromMovieIdAndTheaterId(
+    movieId: number,
+    theaterId: number,
+  ): Promise<SessionDTO[]> {
+    const now = new Date();
+
+    const endOfPeriod = new Date();
+    endOfPeriod.setDate(endOfPeriod.getDate() + 7); // +7 jours
+    endOfPeriod.setHours(23, 59, 59, 999);
+
+    return await this.sessionRepository
+      .createQueryBuilder('session')
+      .leftJoinAndSelect('session.seats', 'seats')
+      .leftJoinAndSelect('session.movie', 'movie')
+      .leftJoinAndSelect('session.room', 'room')
+      .leftJoinAndSelect('room.theater', 'theater')
+      .leftJoinAndSelect('seats.reservation', 'reservation')
+      .where('movie.id = :movieId', { movieId })
+      .andWhere('theater.id = :theaterId', { theaterId })
+      .andWhere('session.startTime >= :start', { start: now })
+      .andWhere('session.endTime <= :end', { end: endOfPeriod })
+      .getMany()
+      .then((sessions) => {
+        return sessions.map((session) => SessionDTO.fromEntity(session));
+      });
+  }
+
   async create(sessionData: CreateSessionDto): Promise<Session> {
     const movie = await this.movieRepository.findOneBy({
       id: sessionData.movieId,
